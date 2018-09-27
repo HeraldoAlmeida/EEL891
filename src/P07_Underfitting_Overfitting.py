@@ -2,9 +2,9 @@
 #  Underfitting e Overfitting
 #==============================================================================
 
-polynomial_degree =     9  # grau do polinomio usado no modelo
+polynomial_degree =      9   # grau do polinomio usado no modelo
 
-number_of_samples =    20  # numero de amostras de dados disponiveis
+number_of_samples =    10000  # numero de amostras de dados disponiveis
 
 #------------------------------------------------------------------------------
 #  Definir a função real (sem ruido) de onde vieram as amostras
@@ -13,7 +13,7 @@ number_of_samples =    20  # numero de amostras de dados disponiveis
 
 import numpy as np
 
-X_grid = np.linspace(0, 1.0, 100).reshape(-1,1)
+X_grid = np.linspace(0, 1.00, 101).reshape(-1,1)
 y_grid = np.sin(2 * np.pi * X_grid)
 
 #------------------------------------------------------------------------------
@@ -198,6 +198,7 @@ plt.show()
 #------------------------------------------------------------------------------
 
 print(lr.coef_)
+print(lr.intercept_)
 #raise SystemExit()
 
 #------------------------------------------------------------------------------
@@ -207,7 +208,7 @@ print(lr.coef_)
 print ( ' Grau     Erro IN    Erro OUT')
 print ( ' ----     -------    --------')
 
-for degree in range(1,15):
+for degree in range(1,11):
     
     pf = PolynomialFeatures(degree)
     lr = LinearRegression()

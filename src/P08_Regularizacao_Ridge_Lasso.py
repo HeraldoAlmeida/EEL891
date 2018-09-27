@@ -4,7 +4,7 @@
 
 polynomial_degree =    7  # grau do polinomio usado no modelo
 
-number_of_samples =   20  # numero de amostras de dados disponiveis
+number_of_samples =   200  # numero de amostras de dados disponiveis
 
 #------------------------------------------------------------------------------
 #  Definir a função real (sem ruido) de onde vieram as amostras
@@ -20,7 +20,9 @@ y_grid = np.sin(2 * np.pi * X_grid)
 #  Gerar um conjunto de amostras com ruido gaussiano em torno da funcao
 #------------------------------------------------------------------------------
 
-np.random.seed(seed=19670532)
+np.random.seed(seed=0)
+
+#np.random.seed(seed=19670532)
 
 X_rand = np.random.rand(number_of_samples,1)
 y_rand = np.sin(2 * np.pi * X_rand)  + 0.1 * np.random.randn(number_of_samples,1)
@@ -91,12 +93,12 @@ from sklearn.linear_model import Ridge, Lasso
 
 # Regressor com regularizacao Ridge
 
-lr_ridge = Ridge ( alpha = 1.E-5 )
+lr_ridge = Ridge ( alpha = 1.E-3 )
 lr_ridge = lr_ridge.fit ( X_train_poly , y_train )
 
 # Regressor com regularizacao lasso
 
-lr_lasso = Lasso ( alpha = 1.E-7 )
+lr_lasso = Lasso ( alpha = 1.E-12 )
 lr_lasso = lr_lasso.fit ( X_train_poly , y_train )
 
 #------------------------------------------------------------------------------
@@ -136,10 +138,10 @@ R2_out = r2_score ( y_test  , y_test_pred  )
 # desempenho do regressor com regularizacao ridge
 
 RMSE_in_ridge  = math.sqrt ( mean_squared_error ( y_train , y_train_pred_ridge ) )
-RMSE_ou_ridget = math.sqrt ( mean_squared_error ( y_test  , y_test_pred_ridge  ) )
+RMSE_out_ridge = math.sqrt ( mean_squared_error ( y_test  , y_test_pred_ridge  ) )
 
 R2_in_ridge  = r2_score ( y_train , y_train_pred_ridge )
-R2_ou_ridget = r2_score ( y_test  , y_test_pred_ridge  )
+R2_out_ridge = r2_score ( y_test  , y_test_pred_ridge  )
 
 # desempenho do regressor com regularizacao lasso
 
@@ -252,6 +254,9 @@ pout.plot    ( X_grid, y_grid_pred_lasso,
 
 
 plt.show()
+
+print(lr.coef_)
+print(lr.intercept_)
 
 #------------------------------------------------------------------------------
 #  Verificar erro DENTRO e FORA da amostra em funcao do grau do polinomio

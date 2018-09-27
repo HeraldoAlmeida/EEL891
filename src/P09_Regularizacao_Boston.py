@@ -37,6 +37,8 @@ X_train, X_test, y_train, y_test = train_test_split(
         test_size = 0.5 #, random_state = 2222
 )
 
+X_train_original = X_train
+
 from sklearn.preprocessing import StandardScaler
 scaler = StandardScaler()
 
@@ -58,7 +60,7 @@ print ( ' ' )
 print ( ' Grau     Erro IN    Erro OUT  |   Erro IN    Erro OUT  |   Erro IN    Erro OUT' )
 print ( ' ----     -------    --------  |   -------    --------  |   -------    --------' )
 
-for degree in range(1,8):
+for degree in range(1,7):
     
     
     # Transformar atributos originais em atributos polinomiais 
@@ -66,6 +68,8 @@ for degree in range(1,8):
     pf = PolynomialFeatures(degree)
     X_train_poly = pf.fit_transform(X_train)
     X_test_poly  = pf.transform(X_test)
+
+    #print(X_train_poly.shape)
 
     # Aplicar transformacao de escala nos atributos polinomiais 
 
@@ -122,4 +126,34 @@ for degree in range(1,8):
             str ( '%10.4f' % RMSE_out_lasso )
           )
 
+# Treinar regressor KNN 
 
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.preprocessing import StandardScaler
+
+print ( ' K-NN' )
+print ( ' ' )
+print ( '   K      Erro IN    Erro OUT' )
+print ( ' ----     -------    --------' )
+
+for k in range(1,51,2):
+
+    knn = KNeighborsRegressor()
+
+#    StdSc   = StandardScaler()
+#    X_train = StdSc.fit_transform(X_train)
+#    X_test  = StdSc.transform(X_test)
+
+    knn = KNeighborsRegressor(n_neighbors=k)
+    knn = knn.fit(X_train, y_train)
+    
+    y_train_pred_knn = knn.predict(X_train)
+    y_test_pred_knn  = knn.predict(X_test)
+    
+    RMSE_in_knn  = math.sqrt ( mean_squared_error ( y_train , y_train_pred_knn ) )
+    RMSE_out_knn = math.sqrt ( mean_squared_error ( y_test  , y_test_pred_knn  ) )
+    
+    print ( str ( '   %2d' % k            ) + '  ' +  
+            str ( '%10.4f' % RMSE_in_knn  ) + '  ' +
+            str ( '%10.4f' % RMSE_out_knn )
+          )
