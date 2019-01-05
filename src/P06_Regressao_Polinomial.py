@@ -168,7 +168,7 @@ X_poly_grid = poly_feat.transform(X_grid)
 y_grid = regressor2.predict(X_poly_grid)
 
 #------------------------------------------------------------------------------
-#  Visualizar graficamente o modelo de regressao linear
+#  Visualizar graficamente o modelo de regressao polinomial
 #------------------------------------------------------------------------------
 
 import matplotlib.pyplot as plt

@@ -4,7 +4,7 @@
 
 import numpy as np
 np.random.seed(seed=19532)
-K = 1
+K = 5
 
 #------------------------------------------------------------------------------
 #  Importar o conjunto de dados em um dataframe do pandas
@@ -19,6 +19,8 @@ dataset = pd.read_excel('../data/D11_Digits.xlsx')
 
 X = dataset.iloc[:, :-1].values
 y = dataset.iloc[:, -1:].values.ravel()
+
+y = [ a%2 for a in y ]
 
 #------------------------------------------------------------------------------
 #  Visualizar alguns digitos
@@ -68,7 +70,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 #X_test  = scaler.transform(X_test)
 
 #------------------------------------------------------------------------------
-#  Treinar um regressor polinomial com o conjunto de treinamento
+#  Treinar um regressor classificador kNN com o conjunto de treinamento
 #------------------------------------------------------------------------------
 
 from sklearn.neighbors import KNeighborsClassifier
@@ -106,14 +108,14 @@ print ( confusion_matrix(y_test, y_test_pred) )
 print ( 'Accuracy = %f %%' % (100*accuracy_score(y_test,y_test_pred)) )
 #raise SystemExit
 
-#------------------------------------------------------------------------------
-#  Verificar erro DENTRO e FORA da amostra em funcao do grau do polinomio
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+##  Verificar erro DENTRO e FORA da amostra em funcao de K
+##------------------------------------------------------------------------------
 
 print ( '    k     Acc. IN    Acc. OUT')
 print ( ' ----     -------    --------')
 
-for k in range(1,21):
+for k in range(1,21,2):
     
     lr = KNeighborsClassifier( n_neighbors = k )
 
@@ -131,33 +133,62 @@ for k in range(1,21):
             str ( '%10.4f' % acc_out )
           )
 
-#------------------------------------------------------------------------------
-# Regressao Logistica
-#------------------------------------------------------------------------------
-
-from sklearn.linear_model import LogisticRegression
-
-print ( '    C     Acc. IN    Acc. OUT')
-print ( ' ----     -------    --------')
-
-for k in range(-6,6):
-    
-    c = 10**k
-    
-    lr = LogisticRegression(C = c, penalty='l2')
-
-    lr = lr.fit(X_train, y_train)
-    
-    y_train_pred = lr.predict(X_train)
-    
-    y_test_pred = lr.predict(X_test)
-    
-    acc_in  = accuracy_score ( y_train , y_train_pred )
-    acc_out = accuracy_score ( y_test  , y_test_pred  )
-
-    print ( str ( '   %2d' % k   ) + '  ' +  
-            str ( '%10.4f' % acc_in  ) + '  ' +
-            str ( '%10.4f' % acc_out )
-          )
-
-
+##------------------------------------------------------------------------------
+## Regressao Logistica
+##------------------------------------------------------------------------------
+#
+#from sklearn.linear_model import LogisticRegression
+#
+#print ( '    C     Acc. IN    Acc. OUT')
+#print ( ' ----     -------    --------')
+#
+#for k in range(-6,6):
+#    
+#    c = 10**k
+#    
+#    lr = LogisticRegression(C = c, penalty='l2')
+#
+#    lr = lr.fit(X_train, y_train)
+#    
+#    y_train_pred = lr.predict(X_train)
+#    
+#    y_test_pred = lr.predict(X_test)
+#    
+#    acc_in  = accuracy_score ( y_train , y_train_pred )
+#    acc_out = accuracy_score ( y_test  , y_test_pred  )
+#
+#    print ( str ( '   %2d' % k   ) + '  ' +  
+#            str ( '%10.4f' % acc_in  ) + '  ' +
+#            str ( '%10.4f' % acc_out )
+#          )
+#
+#
+###------------------------------------------------------------------------------
+### Regressao Logistica
+###------------------------------------------------------------------------------
+##
+##from sklearn.naive_bayes import GaussianNB, MultinomialNB
+##
+##print ( '    A     Acc. IN    Acc. OUT')
+##print ( ' ----     -------    --------')
+##
+##for k in range(-3,9):
+##    
+##    a = 10**k
+##
+##    nb = MultinomialNB(alpha=a)
+##    
+##    nb = nb.fit(X_train, y_train)
+##    
+##    y_train_pred = nb.predict(X_train)
+##    
+##    y_test_pred = nb.predict(X_test)
+##    
+##    acc_in  = accuracy_score ( y_train , y_train_pred )
+##    acc_out = accuracy_score ( y_test  , y_test_pred  )
+##    
+##    print ( str ( '   %2d' % k       ) + '  ' +  
+##            str ( '%10.4f' % acc_in  ) + '  ' +
+##            str ( '%10.4f' % acc_out )
+##          )
+##

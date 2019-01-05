@@ -4,7 +4,7 @@
 
 polynomial_degree =    7  # grau do polinomio usado no modelo
 
-number_of_samples =   200  # numero de amostras de dados disponiveis
+number_of_samples =   40  # numero de amostras de dados disponiveis
 
 #------------------------------------------------------------------------------
 #  Definir a função real (sem ruido) de onde vieram as amostras
@@ -93,12 +93,12 @@ from sklearn.linear_model import Ridge, Lasso
 
 # Regressor com regularizacao Ridge
 
-lr_ridge = Ridge ( alpha = 1.E-3 )
+lr_ridge = Ridge ( alpha = 1.e-4 )
 lr_ridge = lr_ridge.fit ( X_train_poly , y_train )
 
 # Regressor com regularizacao lasso
 
-lr_lasso = Lasso ( alpha = 1.E-12 )
+lr_lasso = Lasso ( alpha = 1.E-4 )
 lr_lasso = lr_lasso.fit ( X_train_poly , y_train )
 
 #------------------------------------------------------------------------------

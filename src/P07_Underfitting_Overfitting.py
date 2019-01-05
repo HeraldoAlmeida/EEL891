@@ -2,9 +2,9 @@
 #  Underfitting e Overfitting
 #==============================================================================
 
-polynomial_degree =      9   # grau do polinomio usado no modelo
+polynomial_degree =      9  # grau do polinomio usado no modelo
 
-number_of_samples =    10000  # numero de amostras de dados disponiveis
+number_of_samples =     20  # numero de amostras de dados disponiveis
 
 #------------------------------------------------------------------------------
 #  Definir a função real (sem ruido) de onde vieram as amostras
@@ -208,7 +208,7 @@ print(lr.intercept_)
 print ( ' Grau     Erro IN    Erro OUT')
 print ( ' ----     -------    --------')
 
-for degree in range(1,11):
+for degree in range(1,21):
     
     pf = PolynomialFeatures(degree)
     lr = LinearRegression()

@@ -34,10 +34,10 @@ from matplotlib.colors import ListedColormap
 foo = pd.plotting.scatter_matrix(
         attributes, 
         c=y, 
-        figsize=(15, 15),
+        figsize=(12, 12),
         marker='o',
         hist_kwds={'bins': 20},
-        s=60, 
+        s=30, 
         alpha=.8,
         cmap=ListedColormap(['#FF0000', '#00FF00', '#0000FF'])
 )
@@ -71,7 +71,7 @@ ys = X[:,coly]
 zs = X[:,colz]
 
 myAxes.scatter(xs, ys, zs, c=y, marker='o', s=40, alpha=0.5, 
-           cmap=ListedColormap(['blue', 'red', 'green']) )
+           cmap=ListedColormap(['red', 'green' , 'blue']) )
 
 myAxes.set_xlabel(columnNames[colx])
 myAxes.set_ylabel(columnNames[coly])

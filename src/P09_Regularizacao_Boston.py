@@ -39,11 +39,11 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 X_train_original = X_train
 
-from sklearn.preprocessing import StandardScaler
-scaler = StandardScaler()
-
-X_train = scaler.fit_transform(X_train)
-X_test  = scaler.transform(X_test)
+#from sklearn.preprocessing import StandardScaler
+#scaler = StandardScaler()
+#
+#X_train = scaler.fit_transform(X_train)
+#X_test  = scaler.transform(X_test)
     
 
 #------------------------------------------------------------------------------
@@ -126,6 +126,7 @@ for degree in range(1,7):
             str ( '%10.4f' % RMSE_out_lasso )
           )
 
+
 # Treinar regressor KNN 
 
 from sklearn.neighbors import KNeighborsRegressor
@@ -157,3 +158,37 @@ for k in range(1,51,2):
             str ( '%10.4f' % RMSE_in_knn  ) + '  ' +
             str ( '%10.4f' % RMSE_out_knn )
           )
+
+#print ( '--------------------------------------------------------------------')
+#print ( ' LINEAR SVM' )
+#print ( '--------------------------------------------------------------------')
+#print ( ' ' )
+#
+#from sklearn.svm import LinearSVR
+#
+#print ( '    C     Acc. IN    Acc. OUT')
+#print ( ' ----     -------    --------')
+#
+#for k in range(-6,6):
+#    
+#    c = 10**k
+#    
+#    classifier = LinearSVR(C = c)
+#
+#    classifier = classifier.fit(X_train, y_train.ravel())
+#    
+#    y_train_pred = classifier.predict(X_train)
+#    
+#    y_test_pred = classifier.predict(X_test)
+#    
+##    y_train_pred_knn = knn.predict(X_train)
+##    y_test_pred_knn  = knn.predict(X_test)
+#    
+#    RMSE_in  = math.sqrt ( mean_squared_error ( y_train , y_train_pred ) )
+#    RMSE_out = math.sqrt ( mean_squared_error ( y_test  , y_test_pred  ) )
+#    
+#    print ( str ( '   %2d' % k            ) + '  ' +  
+#            str ( '%10.4f' % RMSE_in  ) + '  ' +
+#            str ( '%10.4f' % RMSE_out )
+#          )
+#
