@@ -2,7 +2,7 @@
 #  Regularizacao Ridge e Lasso
 #==============================================================================
 
-polynomial_degree =    7  # grau do polinomio usado no modelo
+polynomial_degree =    9  # grau do polinomio usado no modelo
 
 number_of_samples =   40  # numero de amostras de dados disponiveis
 
@@ -25,7 +25,7 @@ np.random.seed(seed=0)
 #np.random.seed(seed=19670532)
 
 X_rand = np.random.rand(number_of_samples,1)
-y_rand = np.sin(2 * np.pi * X_rand)  + 0.1 * np.random.randn(number_of_samples,1)
+y_rand = np.sin(2 * np.pi * X_rand)  + 0.2 * np.random.randn(number_of_samples,1)
 
 #------------------------------------------------------------------------------
 #  Dividir o conjunto de dados em conjunto de treinamento e conjunto de teste
@@ -89,16 +89,17 @@ lr = lr.fit(X_train_poly, y_train)
 #  Treinar regressores polinomiais com regularizacao ridge e lasso 
 #------------------------------------------------------------------------------
 
-from sklearn.linear_model import Ridge, Lasso
+from sklearn.linear_model import Ridge, Lasso, ElasticNet
 
 # Regressor com regularizacao Ridge
 
-lr_ridge = Ridge ( alpha = 1.e-4 )
+#lr_ridge = Ridge ( alpha = 1.e-3 )
+lr_ridge = ElasticNet ( alpha = 1.e-3 , l1_ratio = 0.8)
 lr_ridge = lr_ridge.fit ( X_train_poly , y_train )
 
 # Regressor com regularizacao lasso
 
-lr_lasso = Lasso ( alpha = 1.E-4 )
+lr_lasso = Lasso ( alpha = 1.E-3 )
 lr_lasso = lr_lasso.fit ( X_train_poly , y_train )
 
 #------------------------------------------------------------------------------
@@ -179,7 +180,7 @@ plt.ylim ( -1.5 , 1.5 )
 
 pin.title.set_text ( 'Aproximacao de grau '+ str(polynomial_degree) + 
                      '\nDesempenho DENTRO da amostra:'              +
-                     '\n R = ' +  str ( '%.4f' % R2_in  )           +
+                     '\n R2 = ' +  str ( '%.4f' % R2_in  )           +
                      ' RMSE = ' + str ( '%.4f' % RMSE_in)
                    )
 

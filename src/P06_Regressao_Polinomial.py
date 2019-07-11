@@ -133,14 +133,14 @@ print('R2   = %.3f' %                     r2_score(y, y_pred_1) )
 
 from sklearn.preprocessing import PolynomialFeatures
 
-poly_feat = PolynomialFeatures(degree = 8)
+poly_feat = PolynomialFeatures(degree = 9)
 X_poly = poly_feat.fit_transform(X)
 
 # treinar o regressor polinomial, ou seja,
 # um regressor linear treinado com os atributos polinomiais
 # derivados dos atributos originais das amostras
 
-regressor2 = LinearRegression()
+regressor2 = LinearRegression(fit_intercept=False)
 regressor2.fit(X_poly, y)
 
 #------------------------------------------------------------------------------

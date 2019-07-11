@@ -1,5 +1,5 @@
 #==============================================================================
-#  Regressao usando KNN
+#  Classificacao usando Random Forest
 #==============================================================================
 
 import numpy as np
@@ -48,22 +48,23 @@ X_train, X_test, y_train, y_test = train_test_split(
 #  Treinar um regressor polinomial com o conjunto de treinamento
 #------------------------------------------------------------------------------
 
-from sklearn.neighbors import KNeighborsClassifier
+#from sklearn.neighbors import KNeighborsClassifier
+from sklearn.ensemble import RandomForestClassifier
 
-knn = KNeighborsClassifier( n_neighbors = K )
-knn = knn.fit(X_train, y_train)
+lr = RandomForestClassifier(  )
+lr = lr.fit(X_train, y_train)
 
 #------------------------------------------------------------------------------
 #  Obter a resposta do modelo para o proprio conjunto de treinamento
 #------------------------------------------------------------------------------
 
-y_train_pred = knn.predict(X_train)
+y_train_pred = lr.predict(X_train)
 
 #------------------------------------------------------------------------------
 #  Obter a resposta do modelo para o conjunto de teste
 #------------------------------------------------------------------------------
 
-y_test_pred = knn.predict(X_test)
+y_test_pred = lr.predict(X_test)
 
 #------------------------------------------------------------------------------
 #  Calcular o desempenho do modelo dentro e fora da amostra
@@ -88,12 +89,12 @@ print ( confusion_matrix(y_test, y_test_pred) )
 print ( '    k     Accu IN    Accu OUT')
 print ( ' ----     -------    --------')
 
-for k in range(1,21):
+for k in range(1,2):
     
-    knn = KNeighborsClassifier( n_neighbors = k )
-    knn = knn.fit(X_train, y_train)
-    y_train_pred = knn.predict(X_train)
-    y_test_pred  = knn.predict(X_test)
+    lr = RandomForestClassifier(  )
+    lr = lr.fit(X_train, y_train)
+    y_train_pred = lr.predict(X_train)
+    y_test_pred = lr.predict(X_test)
     
     #error_in  = precision_score ( y_train , y_train_pred , average = 'macro' )
     #error_out = precision_score ( y_test  , y_test_pred  , average = 'macro' )

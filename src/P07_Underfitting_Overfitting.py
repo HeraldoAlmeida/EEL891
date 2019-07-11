@@ -2,7 +2,7 @@
 #  Underfitting e Overfitting
 #==============================================================================
 
-polynomial_degree =      9  # grau do polinomio usado no modelo
+polynomial_degree =     9  # grau do polinomio usado no modelo
 
 number_of_samples =     20  # numero de amostras de dados disponiveis
 
@@ -191,7 +191,6 @@ pout.plot    ( X_grid , y_grid_pred ,
 
 plt.show()
 
-#raise SystemExit()
 
 #------------------------------------------------------------------------------
 #  Verificar erro DENTRO e FORA da amostra em funcao do grau do polinomio
@@ -205,28 +204,28 @@ print(lr.intercept_)
 #  Exibir os coeficientes do polinomio
 #------------------------------------------------------------------------------
 
-print ( ' Grau     Erro IN    Erro OUT')
-print ( ' ----     -------    --------')
-
-for degree in range(1,21):
-    
-    pf = PolynomialFeatures(degree)
-    lr = LinearRegression()
-
-    X_train_poly = pf.fit_transform(X_train)
-    lr = lr.fit(X_train_poly, y_train)
-    
-    y_train_pred = lr.predict(X_train_poly)
-    
-    X_test_poly = pf.transform(X_test)
-    y_test_pred = lr.predict(X_test_poly)
-    
-    RMSE_in  = math.sqrt ( mean_squared_error ( y_train , y_train_pred ) )
-    RMSE_out = math.sqrt ( mean_squared_error ( y_test  , y_test_pred  ) )
-
-    print ( str ( '   %2d' % degree   ) + '  ' +  
-            str ( '%10.4f' % RMSE_in  ) + '  ' +
-            str ( '%10.4f' % RMSE_out )
-          )
+#print ( ' Grau     Erro IN    Erro OUT')
+#print ( ' ----     -------    --------')
+#
+#for degree in range(1,21):
+#    
+#    pf = PolynomialFeatures(degree)
+#    lr = LinearRegression()
+#
+#    X_train_poly = pf.fit_transform(X_train)
+#    lr = lr.fit(X_train_poly, y_train)
+#    
+#    y_train_pred = lr.predict(X_train_poly)
+#    
+#    X_test_poly = pf.transform(X_test)
+#    y_test_pred = lr.predict(X_test_poly)
+#    
+#    RMSE_in  = math.sqrt ( mean_squared_error ( y_train , y_train_pred ) )
+#    RMSE_out = math.sqrt ( mean_squared_error ( y_test  , y_test_pred  ) )
+#
+#    print ( str ( '   %2d' % degree   ) + '  ' +  
+#            str ( '%10.4f' % RMSE_in  ) + '  ' +
+#            str ( '%10.4f' % RMSE_out )
+#          )
 
 

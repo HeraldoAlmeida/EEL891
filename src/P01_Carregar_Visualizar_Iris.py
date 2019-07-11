@@ -34,7 +34,7 @@ from matplotlib.colors import ListedColormap
 foo = pd.plotting.scatter_matrix(
         attributes, 
         c=y, 
-        figsize=(12, 12),
+        figsize=(9, 9),
         marker='o',
         hist_kwds={'bins': 20},
         s=30, 
@@ -64,7 +64,7 @@ myAxes = myFigure.add_subplot(111, projection='3d')
 # estes são os atributos que serão plotados nos eixos X, Y e Z
 # (identificados pelos números das colunas)
 
-colx, coly, colz = 0, 2, 3
+colx, coly, colz = 1, 2, 3
 
 xs = X[:,colx]
 ys = X[:,coly]

@@ -13,6 +13,7 @@ K = 5
 import pandas as pd
 dataset = pd.read_excel('../data/D11_Digits.xlsx')
 
+
 #------------------------------------------------------------------------------
 #  Criar os arrays numericos correspondentes aos atributos e ao alvo
 #------------------------------------------------------------------------------
@@ -20,9 +21,8 @@ dataset = pd.read_excel('../data/D11_Digits.xlsx')
 X = dataset.iloc[:, :-1].values
 y = dataset.iloc[:, -1:].values.ravel()
 
-#X = dataset.iloc[:, 0:8].values
 
-y = [ a%2 for a in y ]
+#y = [ a%2 for a in y ]
 #y = [ np.int(a==5) for a in y ]
 
 #------------------------------------------------------------------------------
@@ -31,9 +31,9 @@ y = [ a%2 for a in y ]
 
 import matplotlib.pyplot as plt
 
-for i in range(0,10):
+for i in range(0,5):
     plt.figure(figsize=(10,60))
-    d_plot = plt.subplot(1, 10, i+1)
+    d_plot = plt.subplot(1, 5, i+1)
     d_plot.set_title("y = %.2f" % y[i])
  
     d_plot.imshow(X[i,:].reshape(8,8),
@@ -54,20 +54,22 @@ plt.show()
 #  Dividir o conjunto de dados em conjunto de treinamento e conjunto de teste
 #------------------------------------------------------------------------------
 
-from sklearn.model_selection import train_test_split
+#from sklearn.model_selection import train_test_split
+#
+#X_train, X_test, y_train, y_test = train_test_split(
+#        X, 
+#        y,
+#        test_size = 500 #, random_state = 352019
+#)
 
-X_train, X_test, y_train, y_test = train_test_split(
-        X, 
-        y,
-        test_size = 500 #, random_state = 352019
-)
+
 
 #------------------------------------------------------------------------------
 # Aplicar transformacao de escala 
 #------------------------------------------------------------------------------
 
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
-scaler = StandardScaler()
+#from sklearn.preprocessing import StandardScaler, MinMaxScaler
+#scaler = StandardScaler()
 #scaler = MinMaxScaler()
 
 #X_train = scaler.fit_transform(X_train)
@@ -80,7 +82,21 @@ scaler = StandardScaler()
 from sklearn.neighbors import KNeighborsClassifier
 
 lr = KNeighborsClassifier( n_neighbors = K )
-lr = lr.fit(X_train, y_train)
+
+from sklearn.model_selection import cross_val_score
+
+# Perform cross-validation with a given model
+cross_val = cross_val_score(lr, X, y, cv=4, scoring='accuracy')
+
+
+for i in range(2,51):
+    cross_val = cross_val_score(lr, X, y, cv=i, scoring='accuracy')
+    print ( 'cv = %2d : ' % i , '%f %%' % np.mean(cross_val) )
+    
+    
+
+
+#lr = lr.fit(X_train, y_train)
 
 #from sklearn.tree import DecisionTreeClassifier
 
@@ -115,73 +131,9 @@ print ( 'Matriz de confusao  FORA  da amostra: ' )
 print ( confusion_matrix(y_test, y_test_pred) )
 
 print ( 'Accuracy    = %f %%' % (100*accuracy_score(y_test,y_test_pred)) )
-print ( 'Precision   = %f %%' % (100*precision_score(y_test,y_test_pred)) )
-print ( 'Sensitivity = %f %%' % (100*recall_score(y_test,y_test_pred)) )
-print ( 'F1          = %f %%' % (100*f1_score(y_test,y_test_pred)) )
-
-##------------------------------------------------------------------------------
-## SUPPORT VECTOR MACHINE LINEAR
-##------------------------------------------------------------------------------
-
-from sklearn.svm import LinearSVC
-
-print ( '    m           C     Acc. IN    Acc. OUT')
-print ( ' ----     -------     -------    --------')
-
-for k in range(-20,10,2):
-    
-    m = k/10.0
-    c = 10**m
-    
-    LinSVC = LinearSVC(penalty='l2', C=c)
-
-    LinSVC = LinSVC.fit(X_train, y_train)
-
-    y_train_pred = LinSVC.predict(X_train)
-    y_test_pred  = LinSVC.predict(X_test)
-
-    acc_in  = accuracy_score ( y_train , y_train_pred )
-    acc_out = accuracy_score ( y_test  , y_test_pred  )
-
-
-    print ( str ( ' %4.1f' % m       ) + '  ' +  
-            str ( '%10.4f' % c       ) + '  ' +  
-            str ( '%10.4f' % acc_in  ) + '  ' +
-            str ( '%10.4f' % acc_out )
-          )
-
-
-##------------------------------------------------------------------------------
-## SUPPORT VECTOR MACHINE COM KERNEL
-#------------------------------------------------------------------------------
-
-from sklearn.svm import SVC
-
-print ( '    m           C     Acc. IN    Acc. OUT')
-print ( ' ----     -------     -------    --------')
-
-for k in range(-3,4,1):
-    
-    m = k
-    c = 10**m
-    g = 10**m
-    
-    rbfSVC = SVC(kernel='rbf', gamma=10**(-2.7), C=c)
-
-    rbfSVC = rbfSVC.fit(X_train, y_train)
-
-    y_train_pred = rbfSVC.predict(X_train)
-    y_test_pred  = rbfSVC.predict(X_test)
-
-    acc_in  = accuracy_score ( y_train , y_train_pred )
-    acc_out = accuracy_score ( y_test  , y_test_pred  )
-
-    print ( str ( ' %4.1f' % m       ) + '  ' +  
-            str ( '%10.4f' % c       ) + '  ' +  
-            str ( '%10.4f' % acc_in  ) + '  ' +
-            str ( '%10.4f' % acc_out )
-          )
-
+#print ( 'Precision   = %f %%' % (100*precision_score(y_test,y_test_pred)) )
+#print ( 'Sensitivity = %f %%' % (100*recall_score(y_test,y_test_pred)) )
+#print ( 'F1          = %f %%' % (100*f1_score(y_test,y_test_pred)) )
 
 
 
@@ -189,27 +141,27 @@ for k in range(-3,4,1):
 ##  Verificar erro DENTRO e FORA da amostra em funcao de K
 ##------------------------------------------------------------------------------
 
-#print ( '    k     Acc. IN    Acc. OUT')
-#print ( ' ----     -------    --------')
-#
-#for k in range(1,41,2):
-#    
-#    lr = KNeighborsClassifier( n_neighbors = k )
-#
-#    lr = lr.fit(X_train, y_train)
-#    
-#    y_train_pred = lr.predict(X_train)
-#    
-#    y_test_pred = lr.predict(X_test)
-#    
-#    acc_in  = accuracy_score ( y_train , y_train_pred )
-#    acc_out = accuracy_score ( y_test  , y_test_pred  )
-#
-#    print ( str ( '   %2d' % k   ) + '  ' +  
-#            str ( '%10.4f' % acc_in  ) + '  ' +
-#            str ( '%10.4f' % acc_out )
-#          )
-#
+print ( '    k     Acc. IN    Acc. OUT')
+print ( ' ----     -------    --------')
+
+for k in range(1,41,2):
+    
+    lr = KNeighborsClassifier( n_neighbors = k )
+
+    lr = lr.fit(X_train, y_train)
+    
+    y_train_pred = lr.predict(X_train)
+    
+    y_test_pred = lr.predict(X_test)
+    
+    acc_in  = accuracy_score ( y_train , y_train_pred )
+    acc_out = accuracy_score ( y_test  , y_test_pred  )
+
+    print ( str ( '   %2d' % k   ) + '  ' +  
+            str ( '%10.4f' % acc_in  ) + '  ' +
+            str ( '%10.4f' % acc_out )
+          )
+
 ##------------------------------------------------------------------------------
 ## Regressao Logistica
 ##------------------------------------------------------------------------------
@@ -219,7 +171,7 @@ for k in range(-3,4,1):
 #print ( '    C     Acc. IN    Acc. OUT')
 #print ( ' ----     -------    --------')
 #
-#for k in range(-6,7):
+#for k in range(-6,6):
 #    
 #    c = 10**k
 #    
@@ -241,7 +193,7 @@ for k in range(-3,4,1):
 #
 #
 ###------------------------------------------------------------------------------
-### Classificador Bayesiano Ingenuo
+### Regressao Logistica
 ###------------------------------------------------------------------------------
 ##
 ##from sklearn.naive_bayes import GaussianNB, MultinomialNB

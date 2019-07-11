@@ -39,7 +39,8 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 X_train_original = X_train
 
-#from sklearn.preprocessing import StandardScaler
+#from sklearn.preprocessing import StandardScaler #, MinMaxScaler
+##scaler = MinMaxScaler( feature_range = (-10,10) )
 #scaler = StandardScaler()
 #
 #X_train = scaler.fit_transform(X_train)
@@ -61,8 +62,7 @@ print ( ' Grau     Erro IN    Erro OUT  |   Erro IN    Erro OUT  |   Erro IN    
 print ( ' ----     -------    --------  |   -------    --------  |   -------    --------' )
 
 for degree in range(1,7):
-    
-    
+       
     # Transformar atributos originais em atributos polinomiais 
 
     pf = PolynomialFeatures(degree)
@@ -158,6 +158,8 @@ for k in range(1,51,2):
             str ( '%10.4f' % RMSE_in_knn  ) + '  ' +
             str ( '%10.4f' % RMSE_out_knn )
           )
+
+
 
 #print ( '--------------------------------------------------------------------')
 #print ( ' LINEAR SVM' )

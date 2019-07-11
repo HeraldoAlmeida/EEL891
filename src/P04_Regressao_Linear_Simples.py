@@ -7,7 +7,6 @@
 #------------------------------------------------------------------------------
 
 import pandas as pd
-
 dataset = pd.read_csv('../data/D04_Salario_vs_AnosExperiencia.csv')
 
 #------------------------------------------------------------------------------
@@ -27,7 +26,7 @@ X_train, X_test, y_train, y_test = train_test_split(
         X, 
         y,
         test_size = 1/3 #,
-        #random_state = 20180904
+        #random_state = 20190411
 )
 
 #------------------------------------------------------------------------------
@@ -77,7 +76,7 @@ print('R2   = %.3f' %                     r2_score(y_test , y_pred_test) )
 import numpy as np
 
 print('\nParametros do regressor:\n', 
-      np.append( regressor.coef_ , regressor.intercept_ ) )
+      np.append( regressor.intercept_  , regressor.coef_ ) )
 
 #------------------------------------------------------------------------------
 #  Visualizar o resultado do regressor
@@ -85,7 +84,8 @@ print('\nParametros do regressor:\n',
 
 import matplotlib.pyplot as plt
 
-plt.scatter(X_test, y_test, color = 'red')
+plt.scatter(X_train, y_train, color = 'red')
+plt.scatter(X_test , y_test , color = 'green')
 plt.plot(X_train, regressor.predict(X_train), color = 'blue')
 plt.title('Salario vs Anos de Experiencia')
 plt.xlabel('Anos de Experiencia')
