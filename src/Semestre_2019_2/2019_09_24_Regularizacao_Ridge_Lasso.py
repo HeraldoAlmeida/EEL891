@@ -1,10 +1,10 @@
 #==============================================================================
-#  Underfitting e Overfitting
+#  Regularizacao Ridge e Lasso
 #==============================================================================
 
-polynomial_degree =      3  # grau do polinomio usado no modelo
+polynomial_degree =    9  # grau do polinomio usado no modelo
 
-number_of_samples =     20  # numero de amostras de dados disponiveis
+number_of_samples =   20  # numero de amostras de dados disponiveis
 
 #------------------------------------------------------------------------------
 #  Definir a função real (sem ruido) de onde vieram as amostras
@@ -13,7 +13,7 @@ number_of_samples =     20  # numero de amostras de dados disponiveis
 
 import numpy as np
 
-X_grid = np.linspace(0, 1.00, 101).reshape(-1,1)
+X_grid = np.linspace(0, 1.0, 100).reshape(-1,1)
 y_grid = np.sin(2 * np.pi * X_grid)
 
 #------------------------------------------------------------------------------
@@ -22,8 +22,10 @@ y_grid = np.sin(2 * np.pi * X_grid)
 
 np.random.seed(seed=0)
 
+#np.random.seed(seed=19670532)
+
 X_rand = np.random.rand(number_of_samples,1)
-y_rand = np.sin(2 * np.pi * X_rand) + 0.20 * np.random.randn(number_of_samples,1)
+y_rand = np.sin(2 * np.pi * X_rand)  + 0.2 * np.random.randn(number_of_samples,1)
 
 #------------------------------------------------------------------------------
 #  Dividir o conjunto de dados em conjunto de treinamento e conjunto de teste
@@ -34,7 +36,7 @@ from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(
         X_rand, 
         y_rand,
-        test_size = 0.5 #, random_state = 352019
+        test_size = 0.5 #, random_state = 2222
 )
 
 #------------------------------------------------------------------------------
@@ -43,7 +45,6 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 import matplotlib.pyplot as plt
 
-plt.figure(figsize=(8,8))
 plt.title('Amostras Disponiveis')
 
 plt.scatter ( X_train , y_train , 
@@ -70,33 +71,55 @@ plt.ylim(-1.5,1.5)
 
 plt.show()
 
-#raise SystemExit()
-
 #------------------------------------------------------------------------------
-#  Treinar um regressor polinomial com o conjunto de treinamento
+#  Treinar um regressor polinomial padrao com o conjunto de treinamento
 #------------------------------------------------------------------------------
 
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
 
 pf = PolynomialFeatures(polynomial_degree)
-lr = LinearRegression()
-
 X_train_poly = pf.fit_transform(X_train)
+
+
+lr = LinearRegression()
 lr = lr.fit(X_train_poly, y_train)
 
 #------------------------------------------------------------------------------
-#  Obter a resposta do modelo para o proprio conjunto de treinamento
+#  Treinar regressores polinomiais com regularizacao ridge e lasso 
 #------------------------------------------------------------------------------
 
-y_train_pred = lr.predict(X_train_poly)
+from sklearn.linear_model import Ridge, Lasso, ElasticNet
+
+# Regressor com regularizacao Ridge
+
+lr_ridge = Ridge ( alpha = 1.E-3 )
+#lr_ridge = ElasticNet ( alpha = 1.e-3 , l1_ratio = 0.8)
+lr_ridge = lr_ridge.fit ( X_train_poly , y_train )
+
+# Regressor com regularizacao lasso
+
+lr_lasso = Lasso ( alpha = 1.E-3 )
+lr_lasso = lr_lasso.fit ( X_train_poly , y_train )
 
 #------------------------------------------------------------------------------
-#  Obter a resposta do modelo para o conjunto de teste
+#  Obter a resposta dos modelos para o conjunto de treinamento
+#------------------------------------------------------------------------------
+
+y_train_pred       =       lr.predict(X_train_poly)
+y_train_pred_ridge = lr_ridge.predict(X_train_poly)
+y_train_pred_lasso = lr_lasso.predict(X_train_poly)
+
+#------------------------------------------------------------------------------
+#  Obter a resposta do modelo padrao e dos modelos regularizados 
+#  para o conjunto de teste
 #------------------------------------------------------------------------------
 
 X_test_poly  = pf.transform(X_test)
-y_test_pred = lr.predict(X_test_poly)
+
+y_test_pred       =       lr.predict(X_test_poly)
+y_test_pred_ridge = lr_ridge.predict(X_test_poly)
+y_test_pred_lasso = lr_lasso.predict(X_test_poly)
 
 #------------------------------------------------------------------------------
 #  Calcular o desempenho do modelo dentro e fora da amostra
@@ -105,18 +128,39 @@ y_test_pred = lr.predict(X_test_poly)
 import math
 from sklearn.metrics import mean_squared_error, r2_score
 
+# desempenho do regressor original
+
 RMSE_in  = math.sqrt ( mean_squared_error ( y_train , y_train_pred ) )
 RMSE_out = math.sqrt ( mean_squared_error ( y_test  , y_test_pred  ) )
 
 R2_in  = r2_score ( y_train , y_train_pred )
 R2_out = r2_score ( y_test  , y_test_pred  )
 
+# desempenho do regressor com regularizacao ridge
+
+RMSE_in_ridge  = math.sqrt ( mean_squared_error ( y_train , y_train_pred_ridge ) )
+RMSE_out_ridge = math.sqrt ( mean_squared_error ( y_test  , y_test_pred_ridge  ) )
+
+R2_in_ridge  = r2_score ( y_train , y_train_pred_ridge )
+R2_out_ridge = r2_score ( y_test  , y_test_pred_ridge  )
+
+# desempenho do regressor com regularizacao lasso
+
+RMSE_in_lasso  = math.sqrt ( mean_squared_error ( y_train , y_train_pred_lasso ) )
+RMSE_out_lasso = math.sqrt ( mean_squared_error ( y_test  , y_test_pred_lasso  ) )
+
+R2_in_lasso  = r2_score ( y_train , y_train_pred_lasso )
+R2_out_lasso = r2_score ( y_test  , y_test_pred_lasso  )
+
 #------------------------------------------------------------------------------
 #  Obter a resposta do modelo para o grid (para posteriormente plotar a curva)
 #------------------------------------------------------------------------------
 
 X_grid_poly = pf.transform(X_grid)
-y_grid_pred = lr.predict(X_grid_poly)
+
+y_grid_pred       =       lr.predict(X_grid_poly)
+y_grid_pred_ridge = lr_ridge.predict(X_grid_poly)
+y_grid_pred_lasso = lr_lasso.predict(X_grid_poly)
 
 #------------------------------------------------------------------------------
 #  Visualizar a resposta do modelo dentro e fora da amostra
@@ -141,7 +185,7 @@ pin.title.set_text ( 'Aproximacao de grau '+ str(polynomial_degree) +
                    )
 
 pin.plot    ( X_grid, y_grid     ,
-              color = 'grey' , linestyle = 'dotted'  , alpha = 0.5 ,
+              color = 'grey' , linestyle = 'dashed'  , alpha = 0.5 ,
               label='Funcao alvo (desconhecida)'
              )
 
@@ -150,14 +194,24 @@ pin.scatter ( X_train , y_train      ,
               label = 'Conjunto de Treinamento'
             )
 
-pin.scatter ( X_train , y_train_pred ,
-              color = 'blue' , marker = 'x' , s = 60 , alpha = 0.5 ,
-              label = 'Respostas do Modelo'
-            )
+#pin.scatter ( X_train , y_train_pred ,
+#              color = 'blue' , marker = 'x' , s = 60 , alpha = 0.5 ,
+#              label = 'Respostas do Modelo'
+#            )
 
 pin.plot    ( X_grid, y_grid_pred,
               color = 'blue' , linestyle = 'solid'   , alpha = 0.25,
-              label='Funcao correspondente ao modelo'
+              label='Funcao correspondente ao modelo padrao'
+            )
+
+pin.plot    ( X_grid, y_grid_pred_ridge,
+              color = 'magenta' , linestyle = 'solid'   , alpha = 0.25,
+              label='Funcao correspondente ao modelo ridge'
+            )
+
+pin.plot    ( X_grid, y_grid_pred_lasso,
+              color = 'orange' , linestyle = 'solid'   , alpha = 0.25,
+              label='Funcao correspondente ao modelo LASSO'
             )
 
 
@@ -179,54 +233,93 @@ pout.scatter ( X_test , y_test      ,
                label = 'Conjunto de Teste'
              )
 
-pout.scatter ( X_test , y_test_pred ,
-               color = 'blue'  , marker = 'x' , s = 60 , alpha = 0.5 ,
-               label = 'Respostas do Modelo'
-             )
+#pout.scatter ( X_test , y_test_pred ,
+#               color = 'blue'  , marker = 'x' , s = 60 , alpha = 0.5 ,
+#               label = 'Respostas do Modelo'
+#             )
 
 pout.plot    ( X_grid , y_grid_pred ,
                color = 'blue'  , linestyle = 'solid'   , alpha = 0.25,
                label='Funcao correspondente ao modelo'
              )
 
-plt.show()
-#raise SystemExit()
+pout.plot    ( X_grid, y_grid_pred_ridge,
+               color = 'magenta' , linestyle = 'solid'   , alpha = 0.25,
+               label='Funcao correspondente ao modelo ridge'
+             )
 
+pout.plot    ( X_grid, y_grid_pred_lasso,
+               color = 'orange' , linestyle = 'solid'   , alpha = 0.25,
+               label='Funcao correspondente ao modelo LASSO'
+             )
+
+
+plt.show()
+
+print(lr.coef_)
+print(lr.intercept_)
+
+pltx.cdfcd()
 
 #------------------------------------------------------------------------------
 #  Verificar erro DENTRO e FORA da amostra em funcao do grau do polinomio
 #------------------------------------------------------------------------------
 
-print('\nParametros do regressor:\n', 
-      np.append( lr.intercept_ , lr.coef_  ) )
-#raise SystemExit()
+print ( '           Regressao Simples   |     Regressao RIDGE    |     Regressao LASSO  ' )
+print ( ' ' )
+print ( ' Grau     Erro IN    Erro OUT  |   Erro IN    Erro OUT  |   Erro IN    Erro OUT' )
+print ( ' ----     -------    --------  |   -------    --------  |   -------    --------' )
 
-#------------------------------------------------------------------------------
-#  Exibir os coeficientes do polinomio
-#------------------------------------------------------------------------------
+lr = LinearRegression()
+lr_ridge = Ridge ( alpha = np.power(10,-3.8))
+lr_lasso = Lasso ( alpha = 1.E-9 )
 
-#print ( ' Grau     Erro IN    Erro OUT')
-#print ( ' ----     -------    --------')
-#
-#for degree in range(1,21):
-#    
-#    pf = PolynomialFeatures(degree)
-#    lr = LinearRegression()
-#
-#    X_train_poly = pf.fit_transform(X_train)
-#    lr = lr.fit(X_train_poly, y_train)
-#    
-#    y_train_pred = lr.predict(X_train_poly)
-#    
-#    X_test_poly = pf.transform(X_test)
-#    y_test_pred = lr.predict(X_test_poly)
-#    
-#    RMSE_in  = math.sqrt ( mean_squared_error ( y_train , y_train_pred ) )
-#    RMSE_out = math.sqrt ( mean_squared_error ( y_test  , y_test_pred  ) )
-#
-#    print ( str ( '   %2d' % degree   ) + '  ' +  
-#            str ( '%10.4f' % RMSE_in  ) + '  ' +
-#            str ( '%10.4f' % RMSE_out )
-#          )
+for degree in range(1,21):
+    
+    pf = PolynomialFeatures(degree)
+    lr = LinearRegression()
+
+    # treinamento dos três modelos
+    
+    X_train_poly = pf.fit_transform(X_train)
+    lr = lr.fit(X_train_poly, y_train)
+
+    lr_ridge = lr_ridge.fit ( X_train_poly , y_train )
+    lr_lasso = lr_lasso.fit ( X_train_poly , y_train )
+    
+    # predict dentro da amostra
+    
+    y_train_pred = lr.predict(X_train_poly)
+    
+    y_train_pred_ridge = lr_ridge.predict(X_train_poly)
+    y_train_pred_lasso = lr_lasso.predict(X_train_poly)
+
+    # predict fora da amostra
+    
+    X_test_poly = pf.transform(X_test)
+    y_test_pred = lr.predict(X_test_poly)
+    
+    y_test_pred_ridge = lr_ridge.predict(X_test_poly)
+    y_test_pred_lasso = lr_lasso.predict(X_test_poly)
+    
+    # calcular os erros
+
+    RMSE_in  = math.sqrt ( mean_squared_error ( y_train , y_train_pred ) )
+    RMSE_out = math.sqrt ( mean_squared_error ( y_test  , y_test_pred  ) )
+
+    RMSE_in_ridge  = math.sqrt ( mean_squared_error ( y_train , y_train_pred_ridge ) )
+    RMSE_out_ridge = math.sqrt ( mean_squared_error ( y_test  , y_test_pred_ridge  ) )
+
+    RMSE_in_lasso  = math.sqrt ( mean_squared_error ( y_train , y_train_pred_lasso ) )
+    RMSE_out_lasso = math.sqrt ( mean_squared_error ( y_test  , y_test_pred_lasso  ) )
+
+    print ( str ( '   %2d' % degree   ) + '  ' +  
+            str ( '%10.4f' % RMSE_in  ) + '  ' +
+            str ( '%10.4f' % RMSE_out ) + '  |' +
+            str ( '%10.4f' % RMSE_in_ridge  ) + '  ' +
+            str ( '%10.4f' % RMSE_out_ridge ) + '  |' +
+            str ( '%10.4f' % RMSE_in_lasso  ) + '  ' +
+            str ( '%10.4f' % RMSE_out_lasso )
+          )
 
 
