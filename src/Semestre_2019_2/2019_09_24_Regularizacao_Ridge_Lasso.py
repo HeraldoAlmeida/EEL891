@@ -2,7 +2,7 @@
 #  Regularizacao Ridge e Lasso
 #==============================================================================
 
-polynomial_degree =    9  # grau do polinomio usado no modelo
+polynomial_degree =    5  # grau do polinomio usado no modelo
 
 number_of_samples =   20  # numero de amostras de dados disponiveis
 
@@ -259,7 +259,7 @@ plt.show()
 print(lr.coef_)
 print(lr.intercept_)
 
-pltx.cdfcd()
+
 
 #------------------------------------------------------------------------------
 #  Verificar erro DENTRO e FORA da amostra em funcao do grau do polinomio
@@ -274,7 +274,7 @@ lr = LinearRegression()
 lr_ridge = Ridge ( alpha = np.power(10,-3.8))
 lr_lasso = Lasso ( alpha = 1.E-9 )
 
-for degree in range(1,21):
+for degree in range(1,6):
     
     pf = PolynomialFeatures(degree)
     lr = LinearRegression()

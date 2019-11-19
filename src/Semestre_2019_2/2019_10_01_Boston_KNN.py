@@ -61,7 +61,12 @@ print ( ' ----     -------    --------' )
 
 for k in range(1,21):
 
-    knn = KNeighborsRegressor(n_neighbors=k,weights='distance',p=1)
+    knn = KNeighborsRegressor(
+            n_neighbors=k,
+            weights='distance',
+            p=1
+            )
+    #knn = KNeighborsRegressor(n_neighbors=k)
     knn = knn.fit(X_train, y_train)
     
     y_train_pred_knn = knn.predict(X_train)

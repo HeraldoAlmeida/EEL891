@@ -64,7 +64,7 @@ myAxes = myFigure.add_subplot(111, projection='3d')
 # estes são os atributos que serão plotados nos eixos X, Y e Z
 # (identificados pelos números das colunas)
 
-colx, coly, colz = 1, 2, 0
+colx, coly, colz = 1, 2, 3
 
 xs = X[:,colx]
 ys = X[:,coly]
