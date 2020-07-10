@@ -17,7 +17,7 @@ dataset = pd.read_excel('../../data/D11_Digits.xlsx')
 #  Criar os arrays numericos correspondentes aos atributos e ao alvo
 #------------------------------------------------------------------------------
 
-X = dataset.iloc[:, :-1].values
+X = dataset.iloc[:, 1:-1].values
 y = dataset.iloc[:, -1:].values.ravel()
 
 #X = dataset.iloc[:, 0:8].values
@@ -29,24 +29,24 @@ y = dataset.iloc[:, -1:].values.ravel()
 #  Visualizar alguns digitos
 #------------------------------------------------------------------------------
 
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
-for i in range(0,10):
-    plt.figure(figsize=(10,60))
-    d_plot = plt.subplot(1, 10, i+1)
-    d_plot.set_title("y = %.2f" % y[i+1000])
+# for i in range(0,10):
+#     plt.figure(figsize=(40,240))
+#     d_plot = plt.subplot(1, 10, i+1)
+#     d_plot.set_title("y = %.2f" % y[i])
  
-    d_plot.imshow(X[i+1000,:].reshape(8,8),
-                  #interpolation='spline16',
-                  interpolation='nearest',
-                  cmap='binary',
-                  vmin=0 , vmax=16)
-    #plt.text(-8, 3, "y = %.2f" % y[i])
+#     d_plot.imshow(X[i,:].reshape(8,8),
+#                   #interpolation='spline16',
+#                   interpolation='nearest',
+#                   cmap='binary',
+#                   vmin=0 , vmax=16)
+#     #plt.text(-8, 3, "y = %.2f" % y[i])
 
-    d_plot.set_xticks(())
-    d_plot.set_yticks(())
+#     d_plot.set_xticks(())
+#     d_plot.set_yticks(())
  
-plt.show()
+# plt.show()
 
 
 
@@ -81,8 +81,9 @@ from sklearn.linear_model import LogisticRegression
 
 lr = LogisticRegression(
         penalty='l2',
-        C=15,
-        multi_class='ovr'  # 'multinomial'
+        C=0.01, # 15
+        multi_class='ovr',  # 'multinomial'
+        max_iter = 1000
         )
 lr = lr.fit(X_train, y_train)
 
@@ -118,10 +119,10 @@ print ( confusion_matrix(y_train, y_train_pred) )
 print ( 'Matriz de confusao  FORA  da amostra: ' )
 print ( confusion_matrix(y_test, y_test_pred) )
 
-print ( 'Accuracy    = ' + str(100*accuracy_score(y_test,y_test_pred)) )
-print ( 'Precision   = ' + str(100*precision_score(y_test,y_test_pred,average=None)) )
-print ( 'Sensitivity = ' + str(100*recall_score(y_test,y_test_pred,average=None)) )
-print ( 'F1          = ' + str(100*f1_score(y_test,y_test_pred,average=None)) )
+print ( 'Accuracy    = %6.2f' % (100.0*accuracy_score(y_test,y_test_pred)) )
+#print ( 'Precision   = ' + str(100*precision_score(y_test,y_test_pred,average=None)) )
+#print ( 'Sensitivity = ' + str(100*recall_score(y_test,y_test_pred,average=None)) )
+#print ( 'F1          = ' + str(100*f1_score(y_test,y_test_pred,average=None)) )
 
 ##------------------------------------------------------------------------------
 ##  Verificar erro DENTRO e FORA da amostra em funcao de K

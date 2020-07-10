@@ -1,10 +1,10 @@
 #==============================================================================
-#  Regressao Linear Polinomial
+#  Regressao Polinomial
 #==============================================================================
 
 import numpy as np
 
-DEGREE = 6
+DEGREE = 20
 
 #------------------------------------------------------------------------------
 #  Importar o conjunto de dados em um dataframe do pandas
@@ -132,7 +132,7 @@ import math
 from sklearn.metrics import mean_squared_error, r2_score
 
 print('\nDesempenho do regressor linear:')
-#print('MSE  = %.3f' %           mean_squared_error(y, y_grid) )
+print('MSE  = %.3f' %           mean_squared_error(y, y_pred_1) )
 print('RMSE = %.3f' % math.sqrt(mean_squared_error(y, y_pred_1)))
 print('R2   = %.3f' %                     r2_score(y, y_pred_1) )
 
@@ -206,11 +206,11 @@ from sklearn.metrics import mean_squared_error, r2_score
 
 print('\nDesempenho do regressor linear:')
 print('RMSE = %.3f' % math.sqrt(mean_squared_error(y, y_pred_1)))
-print('R2   = %.3f' %                     r2_score(y, y_pred_1) )
+print('R2   = %.9f' %                     r2_score(y, y_pred_1) )
 
 print('\nDesempenho do regressor polinomial:')
 print('RMSE = %.3f' % math.sqrt(mean_squared_error(y, y_pred_2)))
-print('R2   = %.3f' %                     r2_score(y, y_pred_2) )
+print('R2   = %.9f' %                     r2_score(y, y_pred_2) )
 
 
 #

@@ -64,7 +64,7 @@ for k in range(1,21):
     knn = KNeighborsRegressor(
             n_neighbors=k,
             weights='distance',
-            p=1
+            p=2
             )
     #knn = KNeighborsRegressor(n_neighbors=k)
     knn = knn.fit(X_train, y_train)

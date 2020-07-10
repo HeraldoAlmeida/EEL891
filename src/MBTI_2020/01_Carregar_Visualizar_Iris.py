@@ -2,6 +2,7 @@
 #  Carga e Visualizacao do Conjunto de Dados IRIS (problema de classificacao)
 #==============================================================================
 
+
 #------------------------------------------------------------------------------
 #  Importar o conjunto de dados Iris em um dataframe do pandas
 #------------------------------------------------------------------------------
@@ -9,21 +10,24 @@
 import pandas as pd
 dataframe = pd.read_excel('../../data/D01_iris.xlsx')
 
+
 #------------------------------------------------------------------------------
 #  Separar em dataframes distintos os atributos e o alvo 
 #    - os atributos são todas as colunas menos a última
 #    - o alvo é a última coluna 
 #------------------------------------------------------------------------------
 
-attributes = dataframe.iloc[:, :-1]
-target     = dataframe.iloc[:, 4]
+attributes = dataframe.iloc[:,:-1]
+target     = dataframe.iloc[:,4]
+
+
 
 #------------------------------------------------------------------------------
 #  Criar os arrays numéricos correspondentes aos atributos e ao alvo
 #------------------------------------------------------------------------------
 
-X = attributes.values
-y = target.values
+X = attributes.to_numpy()
+y = target.to_numpy()
 
 #------------------------------------------------------------------------------
 #  Visualizar a mariz de dispersão dos 4 atributos
@@ -34,12 +38,13 @@ from matplotlib.colors import ListedColormap
 foo = pd.plotting.scatter_matrix(
         attributes, 
         c=y, 
-        figsize=(9, 9),
+        figsize=(11, 11),
         marker='o',
-        hist_kwds={'bins': 20},
-        s=20, 
+        hist_kwds={'bins': 40},
+        s=30, 
         alpha=0.5,
-        cmap=ListedColormap(['#FF0000', '#00FF00', '#0000FF'])
+        #cmap=ListedColormap(['#FF0000', '#00FF00', '#0000FF'])
+        cmap=ListedColormap(['red', 'green', 'blue'])
 )
 
 #------------------------------------------------------------------------------
@@ -47,7 +52,6 @@ foo = pd.plotting.scatter_matrix(
 #------------------------------------------------------------------------------
 
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 
 # preapara lista com os nomes das colunas (rótulos dos eixos do gráfico)
 
@@ -64,7 +68,7 @@ myAxes = myFigure.add_subplot(111, projection='3d')
 # estes são os atributos que serão plotados nos eixos X, Y e Z
 # (identificados pelos números das colunas)
 
-colx, coly, colz = 0,1,2
+colx, coly, colz = 0,2,3
 
 xs = X[:,colx]
 ys = X[:,coly]

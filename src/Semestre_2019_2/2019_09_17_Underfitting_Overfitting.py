@@ -2,9 +2,9 @@
 #  Underfitting e Overfitting
 #==============================================================================
 
-polynomial_degree =      3  # grau do polinomio usado no modelo
+polynomial_degree = 9  # grau do polinomio usado no modelo
 
-number_of_samples =     20  # numero de amostras de dados disponiveis
+number_of_samples = 20  # numero de amostras de dados disponiveis
 
 #------------------------------------------------------------------------------
 #  Definir a função real (sem ruido) de onde vieram as amostras
@@ -43,7 +43,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 import matplotlib.pyplot as plt
 
-plt.figure(figsize=(8,8))
+plt.figure(figsize=(10,10))
 plt.title('Amostras Disponiveis')
 
 plt.scatter ( X_train , y_train , 
@@ -190,7 +190,7 @@ pout.plot    ( X_grid , y_grid_pred ,
              )
 
 plt.show()
-#raise SystemExit()
+raise SystemExit()
 
 
 #------------------------------------------------------------------------------

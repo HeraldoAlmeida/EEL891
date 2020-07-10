@@ -24,9 +24,11 @@ print(columnNames)
 #  Imprimir o grafico de dispersao do alvo em relacao ao atributo 'LSTAT'
 #------------------------------------------------------------------------------
 
-dataframe.plot.scatter(x='LSTAT',y='target')
+var = 'CRIM'
+
+dataframe.plot.scatter(x=var,y='target')
         
-print ( "pearson coef = " , pearsonr(dataframe['LSTAT'],dataframe['target']))
+print ( "pearson coef = " , pearsonr(dataframe[var],dataframe['target']))
 
 #------------------------------------------------------------------------------
 #  Imprimir os gráficos de dispersão do alvo em relação a acda atributo

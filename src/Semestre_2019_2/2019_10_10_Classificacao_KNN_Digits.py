@@ -1,14 +1,15 @@
 #==============================================================================
-#  Classificacao usando KNN
+#  FAKE SCIKIT AND TENSORFLOW MODELS
 #==============================================================================
 
 import numpy as np
-np.random.seed(seed=19532)
-K = 1
+
+#np.random.seed(seed=19651126)
 
 #------------------------------------------------------------------------------
-#  Importar o conjunto de dados em um dataframe do pandas
+#  Generate the dataset
 #------------------------------------------------------------------------------
+
 
 import pandas as pd
 dataset = pd.read_excel('../../data/D11_Digits.xlsx')
@@ -17,7 +18,7 @@ dataset = pd.read_excel('../../data/D11_Digits.xlsx')
 #  Criar os arrays numericos correspondentes aos atributos e ao alvo
 #------------------------------------------------------------------------------
 
-X = dataset.iloc[:, :-1].values
+X = dataset.iloc[:, 1:-1].values
 y = dataset.iloc[:, -1:].values.ravel()
 
 #X = dataset.iloc[:, 0:8].values
@@ -32,11 +33,11 @@ y = dataset.iloc[:, -1:].values.ravel()
 import matplotlib.pyplot as plt
 
 for i in range(0,10):
-    plt.figure(figsize=(10,60))
+    plt.figure(figsize=(40,240))
     d_plot = plt.subplot(1, 10, i+1)
-    d_plot.set_title("y = %.2f" % y[i+1000])
+    d_plot.set_title("y = %.2f" % y[i])
  
-    d_plot.imshow(X[i+1000,:].reshape(8,8),
+    d_plot.imshow(X[i,:].reshape(8,8),
                   #interpolation='spline16',
                   interpolation='nearest',
                   cmap='binary',
@@ -47,8 +48,6 @@ for i in range(0,10):
     d_plot.set_yticks(())
  
 plt.show()
-
-
 
 #------------------------------------------------------------------------------
 #  Dividir o conjunto de dados em conjunto de treinamento e conjunto de teste
@@ -76,7 +75,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 #------------------------------------------------------------------------------
 #  Treinar um regressor classificador kNN com o conjunto de treinamento
 #------------------------------------------------------------------------------
-
+K=1
 from sklearn.neighbors import KNeighborsClassifier
 
 lr = KNeighborsClassifier( n_neighbors = K, weights='uniform' )
@@ -144,6 +143,44 @@ for k in range(1,41,1):
             str ( '%10.4f' % acc_out )
             )
 
+#------------------------------------------------------------------------------
+#  Verificar erro DENTRO e FORA da amostra em funcao de K
+#------------------------------------------------------------------------------
+
+print ( '    k     Acc. IN    Acc. OUT')
+print ( ' ----     -------    --------')
+
+results = np.zeros((20,10))
+
+for experiment in range (10):
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, 
+        y,
+        test_size = 500 #, random_state = 352019
+        )
+    
+    for k in range(1,21,1):
+        
+        lr = KNeighborsClassifier( n_neighbors = k )
+    
+        lr = lr.fit(X_train, y_train)
+        
+        y_train_pred = lr.predict(X_train)
+        
+        y_test_pred = lr.predict(X_test)
+        
+        acc_in  = accuracy_score ( y_train , y_train_pred )
+        acc_out = accuracy_score ( y_test  , y_test_pred  )
+    
+        # print ( str ( '   %2d' % k   ) + '  ' +  
+        #         str ( '%10.4f' % acc_in  ) + '  ' +
+        #         str ( '%10.4f' % acc_out )
+        #         )
+        
+        results[k-1,experiment] = acc_out
+
+    print (experiment)
 
 #mistakes = [ 18, 118, 266]
 #for i in range(3):

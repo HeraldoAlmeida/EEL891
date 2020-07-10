@@ -17,7 +17,7 @@ dataset = pd.read_excel('../../data/D11_Digits.xlsx')
 #  Criar os arrays numericos correspondentes aos atributos e ao alvo
 #------------------------------------------------------------------------------
 
-X = dataset.iloc[:, :-1].values
+X = dataset.iloc[:, 1:-1].values
 y = dataset.iloc[:, -1:].values.ravel()
 
 #------------------------------------------------------------------------------
@@ -178,7 +178,7 @@ for k in range(-250,-199,5):
     m = k/100
     c = 10**m
     
-    LinSVC = LinearSVC(penalty='l2', C=c)
+    LinSVC = LinearSVC(penalty='l2', C=c, max_iter=100000)
 
     LinSVC = LinSVC.fit(X_train, y_train)
 

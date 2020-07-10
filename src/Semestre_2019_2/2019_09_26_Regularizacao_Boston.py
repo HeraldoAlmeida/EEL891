@@ -20,7 +20,7 @@ dataset = pd.read_excel('../../data/D02_Boston.xlsx')
 #  Criar os arrays numericos correspondentes aos atributos e ao alvo
 #------------------------------------------------------------------------------
 
-X = dataset.iloc[:, :-1].values
+X = dataset.iloc[:, 1:-1].values
 y = dataset.iloc[:, -1:].values
 
 #------------------------------------------------------------------------------
@@ -90,6 +90,7 @@ for degree in range(1,5):
     lr = lr.fit(X_train_poly, y_train)
 
     # Treinar regressor polinomial com regularizacao Ridge
+    # alpha = 90
     
     lr_ridge = Ridge ( alpha = 90 , max_iter=1000000 )  # 4.E+1 Boston ; 
     lr_ridge = lr_ridge.fit ( X_train_poly , y_train )

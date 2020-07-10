@@ -1,5 +1,5 @@
 #==============================================================================
-#  Regressao usando KNN
+#  Classificação usando KNN
 #==============================================================================
 
 import numpy as np
@@ -37,15 +37,15 @@ X_train, X_test, y_train, y_test = train_test_split(
 # Aplicar transformacao de escala 
 #------------------------------------------------------------------------------
 
-#from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 #scaler = StandardScaler()
-#scaler = MinMaxScaler()
-#
-#X_train = scaler.fit_transform(X_train)
-#X_test  = scaler.transform(X_test)
+scaler = MinMaxScaler()
+
+X_train = scaler.fit_transform(X_train)
+X_test  = scaler.transform(X_test)
 
 #------------------------------------------------------------------------------
-#  Treinar um regressor polinomial com o conjunto de treinamento
+#  Treinar um classificador KNN com o conjunto de treinamento
 #------------------------------------------------------------------------------
 
 from sklearn.neighbors import KNeighborsClassifier
@@ -103,7 +103,7 @@ print ( ' ----     -------    --------')
 
 for k in range(1,21):
     
-    knn = KNeighborsClassifier( n_neighbors = k )
+    knn = KNeighborsClassifier( n_neighbors = k)
     knn = knn.fit(X_train, y_train)
     y_train_pred = knn.predict(X_train)
     y_test_pred  = knn.predict(X_test)

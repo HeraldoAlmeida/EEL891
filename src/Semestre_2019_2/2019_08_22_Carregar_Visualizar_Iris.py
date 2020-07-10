@@ -36,7 +36,7 @@ foo = pd.plotting.scatter_matrix(
         c=y, 
         figsize=(9, 9),
         marker='o',
-        hist_kwds={'bins': 10},
+        hist_kwds={'bins': 20},
         s=20, 
         alpha=0.5,
         cmap=ListedColormap(['#FF0000', '#00FF00', '#0000FF'])
@@ -55,7 +55,7 @@ columnNames = list(attributes)
 
 # cria figura
 
-myFigure = plt.figure(figsize=(12,10))
+myFigure = plt.figure(figsize=(15,12))
 
 # cria os eixos do primeiro subplot em um quadro 1x1 de subplots na figura
 
@@ -64,7 +64,7 @@ myAxes = myFigure.add_subplot(111, projection='3d')
 # estes são os atributos que serão plotados nos eixos X, Y e Z
 # (identificados pelos números das colunas)
 
-colx, coly, colz = 1, 2, 3
+colx, coly, colz = 0,1,2
 
 xs = X[:,colx]
 ys = X[:,coly]

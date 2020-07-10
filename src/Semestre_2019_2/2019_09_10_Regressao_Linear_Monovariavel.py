@@ -25,8 +25,8 @@ from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(
         X, 
         y,
-        test_size = 0.5,
-        random_state = 20190411
+        test_size = 0.5#,
+        #random_state = 20190411
 )
 
 #------------------------------------------------------------------------------
@@ -87,7 +87,7 @@ import matplotlib.pyplot as plt
 plt.scatter(X_train, y_train, color = 'red')
 plt.scatter(X_test , y_test , color = 'green')
 plt.scatter(X_test , y_pred_test , color = 'blue')
-plt.plot(X_train, regressor.predict(X_train), color = 'blue')
+#plt.plot(X_train, regressor.predict(X_train), color = 'blue')
 plt.title('Salario vs Anos de Experiencia')
 plt.xlabel('Anos de Experiencia')
 plt.ylabel('Salario')
