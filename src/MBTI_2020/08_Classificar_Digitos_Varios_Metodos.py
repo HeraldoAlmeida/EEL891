@@ -1,9 +1,9 @@
 #==============================================================================
-#  Carga e Visualizacao do Conjunto de Dados IRIS (problema de classificacao)
+#  Carga e Visualizacao do Conjunto de Dados DIGITS (problema de classificacao)
 #==============================================================================
 
 #------------------------------------------------------------------------------
-#  Importar o conjunto de dados Iris em um dataframe do pandas
+#  Importar o conjunto de dados Digits em um dataframe do pandas
 #------------------------------------------------------------------------------
 
 import pandas as pd
@@ -33,7 +33,7 @@ import matplotlib.pyplot as plt
 
 for sample in range(0,10):
 
-    plt.figure(figsize=(4,4))
+    plt.figure(figsize=(2,2))
     d_plot = plt.subplot(1,1,1)
 
     d_plot.set_title("y = %.2f" % y[sample])
@@ -62,115 +62,107 @@ X_train, X_test, y_train, y_test = train_test_split(
     )
 
 #------------------------------------------------------------------------------
-# Aplicar uma escala de -1 a 1 nas variáveis
-#------------------------------------------------------------------------------
-
-from sklearn.preprocessing import MinMaxScaler
-
-scaler   = MinMaxScaler((-1,1))
-X_train = scaler.fit_transform(X_train)
-X_test  = scaler.transform(X_test)
-
-
-#------------------------------------------------------------------------------
-# Treinar um classificador KNN para identificar o digito
-#------------------------------------------------------------------------------
-
-from sklearn.neighbors import KNeighborsClassifier
-
-knn_classifier = KNeighborsClassifier(
-    n_neighbors = 1,
-    weights = 'uniform'
-    )
-
-from sklearn.tree import DecisionTreeClassifier
-
-# knn_classifier = DecisionTreeClassifier()
-
-#------------------------------------------------------------------------------
-# Treinar o classificador e obter o resultado para o conjunto de teste
+# Importar classes de apuracao de metricas
 #------------------------------------------------------------------------------
 
 from sklearn.metrics import confusion_matrix, accuracy_score
 
-knn_classifier.fit(X_train,y_train)
-y_pred = knn_classifier.predict(X_test)
+#------------------------------------------------------------------------------
+# KNN
+#------------------------------------------------------------------------------
 
-#------------------------------------------------------------------------------
-# Mostrar a matriz de confusão e a acuracia
-#------------------------------------------------------------------------------
+print ( '+---------------------------------')
+print ( '| KNN')
+print ( '+---------------------------------')
+
+from sklearn.neighbors import KNeighborsClassifier
+
+classifier = KNeighborsClassifier(
+    n_neighbors = 1,
+    weights = 'uniform'
+    )
+
+classifier.fit(X_train,y_train)
+y_pred = classifier.predict(X_test)
 
 cm = confusion_matrix(y_test,y_pred)    
 print("Confusion Matrix =")
 print(cm)
 
 accuracy = accuracy_score(y_test,y_pred)
-print("Accuracy = %.1f %%" % (100*accuracy))
-
-
-import matplotlib.pyplot as plt
-
-for sample in range(0,4):
-
-    plt.figure(figsize=(4,4))
-    d_plot = plt.subplot(1,1,1)
-
-    d_plot.set_title("y = %.2f %.2f" % ( y_test[sample] , y_pred[sample] ) )
-     
-    d_plot.imshow(X_test[sample,:].reshape(8,8),
-                  interpolation='nearest',
-                  cmap='binary',
-                  vmin=0,
-                  vmax=16
-                  )
-
-    plt.show()
-
+print("KNN Accuracy = %.1f %%" % (100*accuracy))
 
 #------------------------------------------------------------------------------
-# Explorar a variacao da acuracia com o parametro k
+# RANDOM FOREST
 #------------------------------------------------------------------------------
 
-    from sklearn.ensemble import RandomForestClassifier
+print ( '+---------------------------------')
+print ( '| RANDOM FOREST')
+print ( '+---------------------------------')
 
-print("K  Accuracy")
-print("-- --------")
+from sklearn.ensemble import RandomForestClassifier
 
-for k in range(-6,+7):
-    
-    # classifier = KNeighborsClassifier(
-    #     n_neighbors = k,
-    #     weights = 'uniform'
-    #     )
+classifier = RandomForestClassifier(
+    n_estimators=100,
+    max_features='auto'
+    )
 
-    # classifier = DecisionTreeClassifier(
-    #     criterion='gini',
-    #     max_features=None,
-    #     max_depth=k
-    #     )
+classifier.fit(X_train,y_train)
+y_pred = classifier.predict(X_test)
 
-    ne = k*5
-    classifier = RandomForestClassifier(
-        n_estimators=ne,
-        max_features='auto'
-        )
+cm = confusion_matrix(y_test,y_pred)    
+print("Confusion Matrix =")
+print(cm)
 
-    from sklearn.svm import LinearSVC
-    
-    c = 10**k
-    
-    classifier = LinearSVC(
-        penalty='l2',
-        C=c,
-        max_iter = 100000
-        )
-    
-    classifier.fit(X_train,y_train)
-    y_pred = classifier.predict(X_test)
-    
-    accuracy = accuracy_score(y_test,y_pred)
-    
-    #print ( "%2d" % k , "%.2f %%" % (100*accuracy) , 'ne = %d'%ne )
-    print ( "%2d" % k , "%.2f %%" % (100*accuracy) , 'C = %f'%c )
+accuracy = accuracy_score(y_test,y_pred)
+print("RANDOM FOREST Accuracy = %.1f %%" % (100*accuracy))
 
-#y_pred vs y_test
+#------------------------------------------------------------------------------
+# REDE NEURAL (usando TensorFlow) 
+#------------------------------------------------------------------------------
+
+print ( '+---------------------------------')
+print ( '| REDE NEURAL (usando TensorFlow)')
+print ( '+---------------------------------')
+
+import numpy
+import tensorflow
+
+#from tensorflow.keras.layers import Flatten,Dense 
+
+z_train = numpy.zeros((y_train.shape[0],10))
+
+for i in range(y_train.shape[0]):
+    z_train[i,y_train[i]] = 1
+
+tf_model = tensorflow.keras.models.Sequential()
+
+# camada de entrada (1 neuronio para cada variavel de entrada)
+tf_model.add(tensorflow.keras.layers.Flatten(input_shape=(64,)))
+
+# camadas internas (ocultas) ---> aqui o projeto eh livre
+tf_model.add(tensorflow.keras.layers.Dense(1000,tensorflow.nn.sigmoid))
+tf_model.add(tensorflow.keras.layers.Dense(1000,tensorflow.nn.sigmoid))
+
+# camda de saida (1 neuronio para cada classe)
+tf_model.add(tensorflow.keras.layers.Dense(10,tensorflow.nn.sigmoid))
+
+tf_model.compile (
+    optimizer = "adam", #SGD RMSprop Adam Adadelta Adagrad Adamax Nadam Ftrl
+    loss      = "binary_crossentropy",
+    metrics   = ["accuracy"]
+    ) # vejam https://keras.io/api/models/model_training_apis/
+
+tf_model.fit (   
+    X_train,
+    z_train,
+    epochs = 10
+    )
+
+z_pred = tf_model.predict(X_test)
+
+y_pred = numpy.argmax(z_pred,axis=1)
+
+
+print ( "TensorFlow Accuracy = %5.2f %%" % ( 100 * accuracy_score(y_test,y_pred) ) )
+

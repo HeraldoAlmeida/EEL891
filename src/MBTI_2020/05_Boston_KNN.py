@@ -52,6 +52,8 @@ X_test  = StdSc.transform(X_test)
 import math
 from sklearn.metrics import mean_squared_error
 
+from sklearn.ensemble import RandomForestRegressor
+
 from sklearn.neighbors import KNeighborsRegressor
 
 print ( ' K-NN' )
@@ -63,11 +65,20 @@ for k in range(1,21):
 
     knn = KNeighborsRegressor(
             n_neighbors=k,
-            weights='distance',
+            weights=None,
             p=2
             )
     #knn = KNeighborsRegressor(n_neighbors=k)
-    knn = knn.fit(X_train, y_train)
+    
+    ne = k*5
+    knn = RandomForestRegressor(
+        n_estimators=ne,
+        max_features='auto'
+        )
+
+    
+    
+    knn = knn.fit(X_train, y_train.ravel())
     
     y_train_pred_knn = knn.predict(X_train)
     y_test_pred_knn  = knn.predict(X_test)

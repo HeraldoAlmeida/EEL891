@@ -1,9 +1,9 @@
 #==============================================================================
-#  Carga e Visualizacao do Conjunto de Dados IRIS (problema de classificacao)
+#  Carga e Visualizacao do Conjunto de Dados DIGITS (problema de classificacao)
 #==============================================================================
 
 #------------------------------------------------------------------------------
-#  Importar o conjunto de dados Iris em um dataframe do pandas
+#  Importar o conjunto de dados Digits em um dataframe do pandas
 #------------------------------------------------------------------------------
 
 import pandas as pd
@@ -62,14 +62,51 @@ X_train, X_test, y_train, y_test = train_test_split(
     )
 
 #------------------------------------------------------------------------------
-# Aplicar uma escala de -1 a 1 nas variáveis
+# Treinar uma rede neural 
 #------------------------------------------------------------------------------
 
-from sklearn.preprocessing import MinMaxScaler
+import numpy
+import tensorflow
 
-scaler   = MinMaxScaler((-1,1))
-X_train = scaler.fit_transform(X_train)
-X_test  = scaler.transform(X_test)
+from sklearn.metrics import accuracy_score
+
+
+z_train = numpy.zeros((y_train.shape[0],10))
+
+for i in range(y_train.shape[0]):
+    z_train[i,y_train[i]] = 1
+
+
+tf_model = tensorflow.keras.models.Sequential()
+
+tf_model.add(tensorflow.keras.layers.Flatten(input_shape=(64,)))
+tf_model.add(tensorflow.keras.layers.Dense(4096,tensorflow.nn.relu))
+tf_model.add(tensorflow.keras.layers.Dense(4096,tensorflow.nn.relu))
+tf_model.add(tensorflow.keras.layers.Dense(10,tensorflow.nn.sigmoid))
+
+tf_model.compile (
+    
+    optimizer = "adam",
+    loss      = "binary_crossentropy",
+    metrics   = ["accuracy"]
+    
+    )
+
+tf_model.fit (
+    
+    X_train,
+    z_train,
+    epochs = 10
+    )
+
+z_pred = tf_model.predict(X_test)
+
+y_pred = numpy.argmax(z_pred,axis=1)
+
+
+print ( "TensorFlow   Accuracy = %5.2f %%" % ( 100 * accuracy_score(y_test,y_pred) ) )
+
+
 
 
 #------------------------------------------------------------------------------
@@ -131,12 +168,12 @@ for sample in range(0,4):
 # Explorar a variacao da acuracia com o parametro k
 #------------------------------------------------------------------------------
 
-    from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier
 
 print("K  Accuracy")
 print("-- --------")
 
-for k in range(-6,+7):
+for k in range(1,101):
     
     # classifier = KNeighborsClassifier(
     #     n_neighbors = k,
@@ -154,23 +191,14 @@ for k in range(-6,+7):
         n_estimators=ne,
         max_features='auto'
         )
-
-    from sklearn.svm import LinearSVC
-    
-    c = 10**k
-    
-    classifier = LinearSVC(
-        penalty='l2',
-        C=c,
-        max_iter = 100000
-        )
     
     classifier.fit(X_train,y_train)
     y_pred = classifier.predict(X_test)
     
+    
+    
     accuracy = accuracy_score(y_test,y_pred)
     
-    #print ( "%2d" % k , "%.2f %%" % (100*accuracy) , 'ne = %d'%ne )
-    print ( "%2d" % k , "%.2f %%" % (100*accuracy) , 'C = %f'%c )
+    print ( "%2d" % k , "%.2f %%" % (100*accuracy) , 'ne = %d'%ne )
 
 #y_pred vs y_test
